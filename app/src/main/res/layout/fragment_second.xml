@@ -1,0 +1,126 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Top menu containing title and action buttons -->
+    <LinearLayout
+        android:id="@+id/topMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="#FAF7F4"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/buttonSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="背景画像選択"
+            android:textColor="#F0B913"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/numberSpinner"
+            android:layout_width="83dp"
+            android:layout_height="40dp"
+            android:background="@drawable/spinner_border"
+            android:spinnerMode="dropdown" />
+
+        <ImageButton
+            android:id="@+id/imageButtonUndo"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Undo"
+            android:src="@drawable/undo3" />
+
+        <ImageButton
+            android:id="@+id/imageButtonRedo"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Redo"
+            android:src="@drawable/redo2" />
+
+        <Button
+            android:id="@+id/buttonComplete"
+            android:layout_width="82dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
+            android:text="完了"
+            android:textColor="#F0B913"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Drawing view where the user can draw or paint -->
+    <com.example.rgbmems_smartphoneapp.DrawingView
+        android:id="@+id/drawingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFD"
+        app:layout_constraintBottom_toTopOf="@id/bottomMenu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topMenu" />
+
+    <!-- Bottom menu containing drawing tools -->
+    <LinearLayout
+        android:id="@+id/bottomMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#FAF7F4"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Pencil tool button -->
+        <ImageButton
+            android:id="@+id/imageButtonPencil"
+            android:layout_width="134dp"
+            android:layout_height="59dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Pencil Tool"
+            app:srcCompat="@drawable/pencil" />
+
+        <!-- SeekBar positioned above the pencil button -->
+        <SeekBar
+            android:id="@+id/seekBarThickness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="50"
+            android:visibility="gone" />
+
+        <!-- Eraser tool button -->
+        <ImageButton
+            android:id="@+id/imageButtonEraser"
+            android:layout_width="118dp"
+            android:layout_height="59dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/todo"
+            app:srcCompat="@drawable/eraser" />
+
+        <!-- Color pen tool button -->
+        <ImageButton
+            android:id="@+id/imageButtonSelectColor"
+            android:layout_width="132dp"
+            android:layout_height="59dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/selectcolor" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
