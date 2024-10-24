@@ -58,7 +58,9 @@ public class SecondFragment extends Fragment {
     private LinearLayout topMenu, bottomMenu; // Layouts for top and bottom menus
     private ImageView imgPen, imgErase; // Icons for pen and eraser  color tools
     private ImageButton imgSelectColor; //
+
     private SeekBar seekBarThickness; //
+    private ImageButton  thickness; //
     private ImageButton btnUndo, btnRedo; // Buttons for undo and redo actions
 
     // Custom drawing view
@@ -85,7 +87,38 @@ public class SecondFragment extends Fragment {
             Toast.makeText(getActivity(), "Error connecting to server", Toast.LENGTH_SHORT).show();
         }
         initializeImagePicker();
+        showColorPicker();
     }
+
+
+    // Phương thức riêng để hiển thị SeekBar và xử lý sự kiện
+    private void showThicknessAdjustment() {
+        seekBarThickness.setVisibility(View.VISIBLE); // Hiển thị SeekBar
+
+        seekBarThickness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Cập nhật độ dày nét vẽ trong DrawingView
+                mDrawingView.setBrushThickness(progress); // Cần có phương thức setBrushThickness trong DrawingView
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Có thể thêm logic khi bắt đầu kéo SeekBar
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Có thể thêm logic khi ngừng kéo SeekBar
+            }
+        });
+    }
+
+    // Phương thức để ẩn SeekBar
+    private void hideThicknessAdjustment() {
+        seekBarThickness.setVisibility(View.GONE); // Ẩn SeekBar
+    }
+
 
     private void showColorPicker() {
         final int[] colors = {
@@ -94,21 +127,34 @@ public class SecondFragment extends Fragment {
                 Color.BLACK, Color.WHITE
         };
 
-        // アクティビティのコンテキストを取得するために requireActivity() を使用する
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setTitle("色を選択");
+        // List of color names
+        final String[] colorNames = {"赤", "緑", "青", "黄色", "シアン", "マゼンタ", "黒", "白"};
 
-        builder.setItems(new String[]{"赤", "緑", "青", "黄色", "シアン", "マゼンタ", "黒", "白"}, new DialogInterface.OnClickListener() {
+        // Find the index of the current color in the list
+        int selectedColorIndex = -1;
+        for (int i = 0; i < colors.length; i++) {
+            if (colors[i] == currentColor) {
+                selectedColorIndex = i;
+                break;
+            }
+        }
+
+        // Use requireActivity() to get the context of the activity
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle("色を選択"); // "Select Color"
+
+        // Show a dialog with single choice items and highlight the selected color
+        builder.setSingleChoiceItems(colorNames, selectedColorIndex, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currentColor = colors[which];
-                mDrawingView.setPaintColor(currentColor); // DrawingView の色を更新
+                currentColor = colors[which]; // Update the selected color
+                mDrawingView.setPaintColor(currentColor); // Update the color of DrawingView
+                dialog.dismiss(); // Close the dialog after selection
             }
         });
 
-        builder.show();
+        builder.show(); // Show the dialog
     }
-
 
 
     @Nullable
@@ -156,6 +202,7 @@ public class SecondFragment extends Fragment {
         mDrawingView = rootView.findViewById(R.id.drawingView);
         imgPen = rootView.findViewById(R.id.imageButtonPencil);
         seekBarThickness = rootView.findViewById(R.id.seekBarThickness);
+        thickness = rootView.findViewById(R.id.imageButtonPenThickness);
         imgErase = rootView.findViewById(R.id.imageButtonEraser);
         imgSelectColor=rootView.findViewById(R.id.imageButtonSelectColor);
         btnUndo = rootView.findViewById(R.id.imageButtonUndo);
@@ -177,6 +224,15 @@ public class SecondFragment extends Fragment {
         });
 
         mDrawingView.setToolMode(ToolMode); // Disable drawing mode at the start
+
+        // Trong phần khởi tạo nút điều chỉnh độ dày bút
+        thickness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showThicknessAdjustment(); // Hiển thị SeekBar để điều chỉnh độ dày bút
+            }
+        });
+
     }
 
     private void setupNumberSpinner() {
@@ -333,37 +389,58 @@ public class SecondFragment extends Fragment {
     private void selectPen() {
         if (ToolMode == BlackPen) {
             ToolMode = Neutral;
-
+            seekBarThickness.setVisibility(View.GONE);
         } else {
             ToolMode = BlackPen;
         }
+
         updateToolSelectionUI();
 
         if (ToolMode == BlackPen) {
             Log.d("Swipe", "Selecting pen");
-            mDrawingView.setToolMode(ToolMode); // Kích hoạt chế độ vẽ
+            mDrawingView.setToolMode(ToolMode); // Activate drawing mode
+            seekBarThickness.setVisibility(View.VISIBLE);
 
             if (viewPager != null) {
                 Log.d("Swipe", "SwipeDisabled");
                 viewPager.setSwipeEnabled(false);
 
                 Log.d("SeekBar", "Set visibility to VISIBLE");
-                seekBarThickness.setVisibility(View.VISIBLE);
 
 
-                // Bắt đầu hiệu ứng rung trên biểu tượng bút
+                // Start vibration effect on the pen icon
                 startAnimation(imgPen);
             }
         } else {
-            mDrawingView.setToolMode(ToolMode); // Vô hiệu hóa chế độ vẽ
+            mDrawingView.setToolMode(ToolMode); // Deactivate drawing mode
             if (viewPager != null) {
                 Log.d("Swipe", "SwipeEnabled");
                 viewPager.setSwipeEnabled(true);
+                seekBarThickness.setVisibility(View.GONE);
             }
         }
 
-        updateToolSelectionUI(); // Cập nhật giao diện và trạng thái vuốt
+        updateToolSelectionUI(); // Update UI and swipe status
+        // Lắng nghe sự kiện thay đổi của SeekBar
+        seekBarThickness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Cập nhật độ dày nét vẽ trong DrawingView
+                    mDrawingView.setBrushThickness(progress); // Cần có phương thức setBrushThickness trong DrawingView
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Có thể thêm logic khi bắt đầu kéo SeekBar
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Có thể thêm logic khi ngừng kéo SeekBar
+            }
+        });
     }
+
 
 
     /**
@@ -372,8 +449,10 @@ public class SecondFragment extends Fragment {
     private void selectEraser() {
         if ( ToolMode == Eraser ) {
             ToolMode = Neutral;
+
         } else {
             ToolMode = Eraser;
+
         }
         updateToolSelectionUI();
         if (ToolMode == Eraser) {
@@ -409,6 +488,8 @@ public class SecondFragment extends Fragment {
         imgPen.setBackgroundColor(ToolMode == BlackPen ? getResources().getColor(R.color.gray) : Color.TRANSPARENT);
         imgErase.setBackgroundColor(ToolMode == Eraser ? getResources().getColor(R.color.gray) : Color.TRANSPARENT);
     }
+
+
 
     /**
      * Toggles the visibility of the top and bottom menus

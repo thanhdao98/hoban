@@ -68,19 +68,31 @@
     <com.example.rgbmems_smartphoneapp.DrawingView
         android:id="@+id/drawingView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="#FFFFFD"
-        app:layout_constraintBottom_toTopOf="@id/bottomMenu"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topMenu"
+        app:layout_constraintBottom_toTopOf="@id/seekBarThickness"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topMenu" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- SeekBar for adjusting brush thickness -->
+    <SeekBar
+        android:id="@+id/seekBarThickness"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:max="50"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomMenu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
 
     <!-- Bottom menu containing drawing tools -->
     <LinearLayout
         android:id="@+id/bottomMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp"
         android:background="#FAF7F4"
         android:orientation="horizontal"
         android:padding="5dp"
@@ -88,39 +100,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Pencil tool button -->
         <ImageButton
             android:id="@+id/imageButtonPencil"
-            android:layout_width="134dp"
-            android:layout_height="59dp"
+            android:layout_width="104dp"
+            android:layout_height="61dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Pencil Tool"
+            android:contentDescription="TODO"
             app:srcCompat="@drawable/pencil" />
 
-        <!-- SeekBar positioned above the pencil button -->
-        <SeekBar
-            android:id="@+id/seekBarThickness"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="50"
-            android:visibility="gone" />
-
-        <!-- Eraser tool button -->
         <ImageButton
             android:id="@+id/imageButtonEraser"
-            android:layout_width="118dp"
-            android:layout_height="59dp"
+            android:layout_width="93dp"
+            android:layout_height="61dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/todo"
             app:srcCompat="@drawable/eraser" />
 
-        <!-- Color pen tool button -->
+        <ImageButton
+            android:id="@+id/imageButtonPenThickness"
+            android:layout_width="92dp"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/todo"
+            app:srcCompat="@drawable/penthickness" />
+
+
         <ImageButton
             android:id="@+id/imageButtonSelectColor"
-            android:layout_width="132dp"
-            android:layout_height="59dp"
+            android:layout_width="109dp"
+            android:layout_height="60dp"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/selectcolor" />
-
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

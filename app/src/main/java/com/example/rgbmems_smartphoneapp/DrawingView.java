@@ -218,16 +218,14 @@ public class DrawingView extends View {
         ToolMode = isToolMode;
     }
     // Set brush size
-    public void setBrushSize(float newSize) {
-        brushSize = newSize; // Update brush size
-        drawPaint.setStrokeWidth(brushSize); // Update drawing paint size
-        erasePaint.setStrokeWidth(brushSize);  // Update eraser paint size
+    // Method to set brush thickness
+    public void setBrushThickness(float thickness) {
+        this.brushSize = thickness; // Cập nhật kích thước cọ
+        drawPaint.setStrokeWidth(thickness); // Cập nhật kích thước cọ cho drawPaint
+        erasePaint.setStrokeWidth(thickness); // Cập nhật kích thước cọ cho erasePaint
+        invalidate(); // Yêu cầu vẽ lại
     }
 
-    // Set eraser size
-    public void setEraserSize(float newSize) {
-        eraserSize = newSize; // Update eraser size
-    }
 
     // Method to set background bitmap
     public void setBackgroundBitmap(Bitmap bitmap) {
